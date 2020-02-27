@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { AlterTableBuilder, CreateTableBuilder } from 'knex';
-import { database } from './model';
+import Knex, { AlterTableBuilder, CreateTableBuilder } from 'knex';
+// import { database } from './model';
 
 export type ColumnType =
   'boolean'
@@ -35,6 +35,9 @@ export interface TableConfig {
 }
 
 export class SchemaBuilder {
+
+  public static database: Knex;
+
   // On map la classe à un map de ses colonnes associées à leurs config ex: <Author, <id, idProps>> <Author, <name, nameProps>>
   private static modelToTableConfigMapper: Map<object, TableConfig> = new Map();
 
@@ -97,7 +100,7 @@ export class SchemaBuilder {
   }
 
   static async createOrUpdateTable(object: any, tableConfig: TableConfig): Promise<void> {
-    const hasTable = await database.schema.hasTable(tableConfig.tableName);
+    const hasTable = await this.database.schema.hasTable(tableConfig.tableName);
     const definedColumns = tableConfig.columnsConfig;
     const definedRelations = tableConfig.relationsConfig;
     if (!hasTable) {
@@ -108,7 +111,7 @@ export class SchemaBuilder {
   }
 
   static async createTable(object: any, tableConfig: TableConfig, definedColumns: Map<string, ColumnConfig>, definedRelations: Map<string, RelationConfig>): Promise<void> {
-    await database.schema.createTable(tableConfig.tableName, (table) => {
+    await this.database.schema.createTable(tableConfig.tableName, (table) => {
       for (const [columnName, columnConfig] of definedColumns) {
         this.createColumn(table, columnName, columnConfig)
       }
@@ -129,7 +132,7 @@ export class SchemaBuilder {
    * /!\ Mais ça ne modifie pas les propriétés des colonnes existantes
    */
   static async updateTable(object: any, tableConfig: TableConfig, definedColumns: Map<string, ColumnConfig>): Promise<void> {
-    const existingColumns = await database(tableConfig.tableName).columnInfo();
+    const existingColumns = await this.database(tableConfig.tableName).columnInfo();
     const existingColumnsNames = Object.keys(existingColumns);
     const definedColumnsNames = Array.from(definedColumns.keys());
 
@@ -140,7 +143,7 @@ export class SchemaBuilder {
     const columnsToCreate = arrayDiff(definedColumnsNames, existingColumnsNames);
     const columnsToDelete = arrayDiff(existingColumnsNames, definedColumnsNames);
 
-    await database.schema.table(tableConfig.tableName, (table) => {
+    await this.database.schema.table(tableConfig.tableName, (table) => {
       for (const columnName of columnsToCreate) {
         const columnConfig = definedColumns.get(columnName)
         this.createColumn(table, columnName, columnConfig as ColumnConfig)

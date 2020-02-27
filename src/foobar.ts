@@ -6,6 +6,7 @@ import Controller from './controller'
 import Model from './orm/model'
 import { SchemaBuilder } from './orm/schemaBuilder';
 import Router from './router'
+import Knex from "knex";
 
 interface FoobarBootstrapInformation {
   controllerClasses: Record<string, typeof Controller>;
@@ -28,18 +29,20 @@ export default class Foobar {
 
   private router: Router
 
-  static config: object
+  public database: Knex
 
   constructor(bootstrapInformation: FoobarBootstrapInformation) {
+    this.database = Knex(bootstrapInformation.config as Knex.Config);
+    Model.database = this.database
     this.controllers = Object.values(bootstrapInformation.controllerClasses)
     this.models = Object.values(bootstrapInformation.modelClasses);
+    SchemaBuilder.database = this.database;
     (async (): Promise<void> => {
       await SchemaBuilder.syncDatabase();
     })()
     this.host = bootstrapInformation.host
     this.port = bootstrapInformation.port
     this.router = new Router(this.controllers)
-    Foobar.config = bootstrapInformation.config
   }
 
   onRequest(req: IncomingMessage, res: ServerResponse): void {

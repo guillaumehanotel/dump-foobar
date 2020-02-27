@@ -1,6 +1,5 @@
 import { NonFunctionKeys } from 'utility-types';
 import Knex, { QueryBuilder } from 'knex';
-export declare const database: Knex;
 export declare enum QueryFilterOrder {
     Asc = "asc",
     Desc = "desc"
@@ -33,11 +32,13 @@ declare type SchemaOf<T extends object> = Pick<T, NonFunctionKeys<T>>;
 declare type ModelIdType = number | string;
 export interface ModelClass<T extends Model> {
     config: ModelConfig;
+    database: Knex;
     [x: string]: any;
     new (data: SchemaOf<T>): T;
 }
 export default class Model {
     static config: ModelConfig;
+    static database: Knex;
     id: string | number;
     constructor(data: SchemaOf<Model>);
     get modelClass(): typeof Model;

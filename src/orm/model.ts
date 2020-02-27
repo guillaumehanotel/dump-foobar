@@ -1,11 +1,5 @@
 import { NonFunctionKeys } from 'utility-types';
 import Knex, { QueryBuilder } from 'knex';
-import defaultConfig from '../config'
-import Foobar from "../foobar";
-
-const dbConfig = Foobar.config !== undefined ? Foobar.config : defaultConfig;
-
-export const database: Knex = Knex(dbConfig as Knex.Config);
 
 export enum QueryFilterOrder {
   Asc = 'asc',
@@ -47,12 +41,15 @@ type ModelIdType = number | string
 
 export interface ModelClass<T extends Model> {
   config: ModelConfig;
+  database: Knex;
   [x: string]: any; // les fonctions
   new(data: SchemaOf<T>): T;
 }
 
 export default class Model {
   public static config: ModelConfig;
+
+  public static database: Knex;
 
   id!: string | number
 
@@ -66,7 +63,7 @@ export default class Model {
   }
 
   static async find<T extends Model>(this: ModelClass<T>, filter?: QueryFilter): Promise<T[]> {
-    let request = database.select().from<T>(this.config.tableName as string)
+    let request = this.database.select().from<T>(this.config.tableName as string)
     if (filter) {
       request = Model.filterQuery(request, filter)
     }
@@ -92,7 +89,7 @@ export default class Model {
   }
 
   static async findById<T extends Model>(this: ModelClass<T>, id: ModelIdType, options?: FindByIdOptions): Promise<T | undefined> {
-    const objectData: any = await database.first().from<T>(this.config.tableName as string).where('id', id);
+    const objectData: any = await this.database.first().from<T>(this.config.tableName as string).where('id', id);
     if (objectData === undefined) return undefined
     let object: T = new this(objectData);
     object = await Model.loadRelations(object, this.config, options);
@@ -128,7 +125,7 @@ export default class Model {
   }
 
   static async create<T extends Model>(this: ModelClass<T>, dataOrModel: Partial<SchemaOf<T>> | T): Promise<T> {
-    const [id] = await database(this.config.tableName).insert(dataOrModel)
+    const [id] = await this.database(this.config.tableName).insert(dataOrModel)
     return this.findById(id)
   }
 
@@ -137,9 +134,9 @@ export default class Model {
     dataOrModelArray: (Partial<SchemaOf<T>> | T)[],
   ): Promise<T[]> {
     const resources = []
-    await database(this.config.tableName).insert(dataOrModelArray) // Unfortunately it does not return the list of ids, only the last one.
+    await this.database(this.config.tableName).insert(dataOrModelArray) // Unfortunately it does not return the list of ids, only the last one.
     for (
-      const record of await database
+      const record of await this.database
         .from<T>(this.getTableName())
         // @ts-ignore
         .whereIn('id', dataOrModelArray.map((value) => value.id))
@@ -164,12 +161,12 @@ export default class Model {
   }
 
   static async deleteById(id: ModelIdType): Promise<boolean> {
-    const response = await database(this.config.tableName).where('id', id).del()
+    const response = await this.database(this.config.tableName).where('id', id).del()
     return !!response
   }
 
   static async deleteByIdList(ids: ModelIdType[]): Promise<boolean> {
-    const response = await database(this.config.tableName).whereIn('id', ids).del()
+    const response = await this.database(this.config.tableName).whereIn('id', ids).del()
     return !!response
   }
 
@@ -197,7 +194,7 @@ export default class Model {
   }
 
   async save<T extends Model>(): Promise<T> {
-    await database(this.modelClass.config.tableName).where({ id: this.id }).update(this)
+    await this.modelClass.database(this.modelClass.config.tableName).where({ id: this.id }).update(this)
     return this as unknown as T
   }
 

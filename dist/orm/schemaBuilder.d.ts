@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { AlterTableBuilder, CreateTableBuilder } from 'knex';
+import Knex, { AlterTableBuilder, CreateTableBuilder } from 'knex';
 export declare type ColumnType = 'boolean' | 'bool' | 'varchar' | 'text' | 'datetime' | 'date' | 'int' | 'increment' | 'bigint' | 'double' | 'blob';
 export interface ColumnConfig {
     type: ColumnType;
@@ -14,6 +14,7 @@ export interface TableConfig {
     tableName: string;
 }
 export declare class SchemaBuilder {
+    static database: Knex;
     private static modelToTableConfigMapper;
     private static columnTypeToSqlBuilderFunctionMapper;
     static registerRelationConfig(object: any, foreignKeyName: string, relationConfig: RelationConfig): void;

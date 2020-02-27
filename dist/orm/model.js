@@ -1,11 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-const knex_1 = tslib_1.__importDefault(require("knex"));
-const config_1 = tslib_1.__importDefault(require("../config"));
-const foobar_1 = tslib_1.__importDefault(require("../foobar"));
-const dbConfig = foobar_1.default.config !== undefined ? foobar_1.default.config : config_1.default;
-exports.database = knex_1.default(dbConfig);
 var QueryFilterOrder;
 (function (QueryFilterOrder) {
     QueryFilterOrder["Asc"] = "asc";
@@ -26,7 +21,7 @@ class Model {
     }
     static find(filter) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            let request = exports.database.select().from(this.config.tableName);
+            let request = this.database.select().from(this.config.tableName);
             if (filter) {
                 request = Model.filterQuery(request, filter);
             }
@@ -54,7 +49,7 @@ class Model {
     }
     static findById(id, options) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const objectData = yield exports.database.first().from(this.config.tableName).where('id', id);
+            const objectData = yield this.database.first().from(this.config.tableName).where('id', id);
             if (objectData === undefined)
                 return undefined;
             let object = new this(objectData);
@@ -95,15 +90,15 @@ class Model {
     }
     static create(dataOrModel) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const [id] = yield exports.database(this.config.tableName).insert(dataOrModel);
+            const [id] = yield this.database(this.config.tableName).insert(dataOrModel);
             return this.findById(id);
         });
     }
     static createFromList(dataOrModelArray) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
             const resources = [];
-            yield exports.database(this.config.tableName).insert(dataOrModelArray); // Unfortunately it does not return the list of ids, only the last one.
-            for (const record of yield exports.database
+            yield this.database(this.config.tableName).insert(dataOrModelArray); // Unfortunately it does not return the list of ids, only the last one.
+            for (const record of yield this.database
                 .from(this.getTableName())
                 // @ts-ignore
                 .whereIn('id', dataOrModelArray.map((value) => value.id))) {
@@ -125,13 +120,13 @@ class Model {
     }
     static deleteById(id) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const response = yield exports.database(this.config.tableName).where('id', id).del();
+            const response = yield this.database(this.config.tableName).where('id', id).del();
             return !!response;
         });
     }
     static deleteByIdList(ids) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const response = yield exports.database(this.config.tableName).whereIn('id', ids).del();
+            const response = yield this.database(this.config.tableName).whereIn('id', ids).del();
             return !!response;
         });
     }
@@ -158,7 +153,7 @@ class Model {
     }
     save() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            yield exports.database(this.modelClass.config.tableName).where({ id: this.id }).update(this);
+            yield this.modelClass.database(this.modelClass.config.tableName).where({ id: this.id }).update(this);
             return this;
         });
     }

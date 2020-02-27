@@ -4,20 +4,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const http_1 = require("http");
 const typescript_logging_1 = require("typescript-logging");
+const model_1 = tslib_1.__importDefault(require("./orm/model"));
 const schemaBuilder_1 = require("./orm/schemaBuilder");
 const router_1 = tslib_1.__importDefault(require("./router"));
+const knex_1 = tslib_1.__importDefault(require("knex"));
 const logger = new typescript_logging_1.Category('foobar');
 class Foobar {
     constructor(bootstrapInformation) {
+        this.database = knex_1.default(bootstrapInformation.config);
+        model_1.default.database = this.database;
         this.controllers = Object.values(bootstrapInformation.controllerClasses);
         this.models = Object.values(bootstrapInformation.modelClasses);
+        schemaBuilder_1.SchemaBuilder.database = this.database;
         (() => tslib_1.__awaiter(this, void 0, void 0, function* () {
             yield schemaBuilder_1.SchemaBuilder.syncDatabase();
         }))();
         this.host = bootstrapInformation.host;
         this.port = bootstrapInformation.port;
         this.router = new router_1.default(this.controllers);
-        Foobar.config = bootstrapInformation.config;
     }
     onRequest(req, res) {
         this.router.route(req, res).catch((err) => {

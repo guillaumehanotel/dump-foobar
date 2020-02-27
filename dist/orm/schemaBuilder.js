@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 require("reflect-metadata");
-const model_1 = require("./model");
 class SchemaBuilder {
     static registerRelationConfig(object, foreignKeyName, relationConfig) {
         var _a;
@@ -51,7 +50,7 @@ class SchemaBuilder {
     }
     static createOrUpdateTable(object, tableConfig) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const hasTable = yield model_1.database.schema.hasTable(tableConfig.tableName);
+            const hasTable = yield this.database.schema.hasTable(tableConfig.tableName);
             const definedColumns = tableConfig.columnsConfig;
             const definedRelations = tableConfig.relationsConfig;
             if (!hasTable) {
@@ -64,7 +63,7 @@ class SchemaBuilder {
     }
     static createTable(object, tableConfig, definedColumns, definedRelations) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            yield model_1.database.schema.createTable(tableConfig.tableName, (table) => {
+            yield this.database.schema.createTable(tableConfig.tableName, (table) => {
                 for (const [columnName, columnConfig] of definedColumns) {
                     this.createColumn(table, columnName, columnConfig);
                 }
@@ -87,7 +86,7 @@ class SchemaBuilder {
      */
     static updateTable(object, tableConfig, definedColumns) {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            const existingColumns = yield model_1.database(tableConfig.tableName).columnInfo();
+            const existingColumns = yield this.database(tableConfig.tableName).columnInfo();
             const existingColumnsNames = Object.keys(existingColumns);
             const definedColumnsNames = Array.from(definedColumns.keys());
             const arrayDiff = function (array1, array2) {
@@ -95,7 +94,7 @@ class SchemaBuilder {
             };
             const columnsToCreate = arrayDiff(definedColumnsNames, existingColumnsNames);
             const columnsToDelete = arrayDiff(existingColumnsNames, definedColumnsNames);
-            yield model_1.database.schema.table(tableConfig.tableName, (table) => {
+            yield this.database.schema.table(tableConfig.tableName, (table) => {
                 for (const columnName of columnsToCreate) {
                     const columnConfig = definedColumns.get(columnName);
                     this.createColumn(table, columnName, columnConfig);
