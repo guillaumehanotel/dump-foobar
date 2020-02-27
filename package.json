@@ -1,5 +1,5 @@
 {
-  "name": "foobar-core",
+  "name": "dump-foobar",
   "version": "0.0.1",
   "description": "Foobar framework core",
   "main": "./lib/foobar.js",
@@ -7,19 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "foobar": "./node_modules/.bin/foobar"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@gitlab.com/projects-clx/foobar-core.git"
-  },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://gitlab.com/projects-clx/foobar-core/issues"
-  },
-  "bin": {
-    "foobar": "./foobar.js"
-  },
-  "homepage": "https://gitlab.com/projects-clx/foobar-core#readme",
   "dependencies": {
     "es6-promise": "^4.2.8",
     "mysql": "^2.18.1",
