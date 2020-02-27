@@ -1,6 +1,6 @@
 {
   "name": "dump-foobar",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Foobar framework core",
   "main": "dist/main.js",
   "license": "ISC",
