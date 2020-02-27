@@ -1,8 +1,11 @@
 import { NonFunctionKeys } from 'utility-types';
 import Knex, { QueryBuilder } from 'knex';
+import defaultConfig from '../config'
 import Foobar from "../foobar";
 
-export const database: Knex = Knex(Foobar.config as Knex.Config);
+const dbConfig = Foobar.config !== undefined ? Foobar.config : defaultConfig;
+
+export const database: Knex = Knex(dbConfig as Knex.Config);
 
 export enum QueryFilterOrder {
   Asc = 'asc',

@@ -2,8 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 const knex_1 = tslib_1.__importDefault(require("knex"));
+const config_1 = tslib_1.__importDefault(require("../config"));
 const foobar_1 = tslib_1.__importDefault(require("../foobar"));
-exports.database = knex_1.default(foobar_1.default.config);
+const dbConfig = foobar_1.default.config !== undefined ? foobar_1.default.config : config_1.default;
+exports.database = knex_1.default(dbConfig);
 var QueryFilterOrder;
 (function (QueryFilterOrder) {
     QueryFilterOrder["Asc"] = "asc";
