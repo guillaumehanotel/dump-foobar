@@ -1,9 +1,8 @@
 export * from './controller'
 export * from './router'
 export * from './exceptions'
-export * from './foobar'
+
 export * from './orm/decorators'
-export * from './orm/model'
 export * from './orm/schemaBuilder'
 export * from './orm/exceptions'
 
