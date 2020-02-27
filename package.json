@@ -3,10 +3,6 @@
   "version": "0.0.4",
   "description": "Foobar framework core",
   "main": "dist/main.js",
-  "scripts": {
-    "build": "tsc",
-    "prepare" : "npm run build"
-  },
   "license": "ISC",
   "dependencies": {
     "es6-promise": "^4.2.8",
