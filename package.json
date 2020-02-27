@@ -1,7 +1,8 @@
 {
   "name": "dump-foobar",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Foobar framework core",
+  "main": "dist/main.js",
   "scripts": {
     "build": "tsc",
     "prepare" : "npm run build"
