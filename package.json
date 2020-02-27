@@ -1,6 +1,6 @@
 {
   "name": "dump-foobar",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Foobar framework core",
   "main": "./lib/foobar.js",
   "scripts": {
@@ -28,6 +28,7 @@
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.1",
     "@typescript-eslint/eslint-plugin": "^2.17.0",
-    "@typescript-eslint/parser": "^2.17.0"
+    "@typescript-eslint/parser": "^2.17.0",
+    "tslib": "^1.10.0"
   }
 }

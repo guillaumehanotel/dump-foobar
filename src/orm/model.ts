@@ -1,9 +1,8 @@
 import { NonFunctionKeys } from 'utility-types';
 import Knex, { QueryBuilder } from 'knex';
-import { dbConfig } from '../config'
-import { ModelNotFoundException, RelationNotFoundException } from '../exceptions';
+import Foobar from "../foobar";
 
-export const database: Knex = Knex(dbConfig as Knex.Config);
+export const database: Knex = Knex(Foobar.config as Knex.Config);
 
 export enum QueryFilterOrder {
   Asc = 'asc',

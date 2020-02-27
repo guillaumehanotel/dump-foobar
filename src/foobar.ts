@@ -12,6 +12,7 @@ interface FoobarBootstrapInformation {
   modelClasses: Record<string, typeof Model>;
   host: string;
   port: number;
+  config: object;
 }
 
 const logger = new Category('foobar')
@@ -27,6 +28,8 @@ export default class Foobar {
 
   private router: Router
 
+  static config: object
+
   constructor(bootstrapInformation: FoobarBootstrapInformation) {
     this.controllers = Object.values(bootstrapInformation.controllerClasses)
     this.models = Object.values(bootstrapInformation.modelClasses);
@@ -36,6 +39,7 @@ export default class Foobar {
     this.host = bootstrapInformation.host
     this.port = bootstrapInformation.port
     this.router = new Router(this.controllers)
+    Foobar.config = bootstrapInformation.config
   }
 
   onRequest(req: IncomingMessage, res: ServerResponse): void {
