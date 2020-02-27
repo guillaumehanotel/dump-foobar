@@ -1,8 +1,9 @@
 export * from './controller';
 export * from './router';
 export * from './exceptions';
-export * from './orm/decorators';
+export * from './foobar';
 export * from './orm/model';
+export * from './orm/decorators';
 export * from './orm/schemaBuilder';
 export * from './orm/exceptions';
 export { default as Controller } from './controller';
