@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es2019",
+    "target": "es6",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -12,6 +12,7 @@
     "importHelpers": true,
     "strict": true,
     "baseUrl": "./src",
+//    "outDir": "./dist",
     "skipLibCheck": true,
     "lib": [
       "es2019",

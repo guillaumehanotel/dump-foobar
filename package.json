@@ -1,13 +1,11 @@
 {
   "name": "dump-foobar",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Foobar framework core",
-  "main": "./lib/foobar.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "foobar": "./node_modules/.bin/foobar"
+    "build": "tsc",
+    "prepare" : "npm run build"
   },
-  "author": "",
   "license": "ISC",
   "dependencies": {
     "es6-promise": "^4.2.8",
